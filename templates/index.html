@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genre Prediction</title>
+</head>
+<body>
+    <h2>Predict Music Genre from YouTube URL</h2>
+    <form id="genrePredictionForm">
+        <label for="youtubeURL">YouTube URL:</label>
+        <input type="text" id="youtubeURL" name="youtubeURL" required>
+        <button type="submit">Predict Genre</button>
+    </form>
+    <div id="predictionResult"></div>
+
+    <script>
+        document.getElementById('genrePredictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent the default form submission
+            const youtubeURL = document.getElementById('youtubeURL').value;
+            fetch('/predict_genre', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({youtube_url: youtubeURL}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predictionResult').textContent = 'Predicted Genre: ' + data.genre;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('predictionResult').textContent = 'Error predicting genre';
+            });
+        });
+    </script>
+</body>
+</html>
